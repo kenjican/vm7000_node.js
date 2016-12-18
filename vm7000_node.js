@@ -14,6 +14,19 @@ var value;
 var net = require('net');
 var host = '192.168.0.199';
 var port = 502;
+var mongoose = require("mongoose");
+mongoose.Promise = require('bluebird');
+var db = mongoose.createConnection('localhost','VM7000');
+
+var vmschema = new mongoose.Schema({
+  Rdate:{type:Date,default:Date.now},
+  Model_No:String,
+  pv:[]
+});
+
+var vms = db.model('vms',vmschema);
+
+
 var mbs = new Buffer([0x00,0x01,0x00,0x00,0x00,0x06,0x01,0x04,0x00,0x64,0x00,0x06]);
 
 var client = new net.Socket();
@@ -25,13 +38,39 @@ client.connect(port,host,function(){
 
 client.on('data',function(data){
 	//console.log(data);
+  var vm = new vms({Model_No:'VM1',pv:[]});
+  var temp;
+  for(var i=0;i<6;i++){
+    temp = data.readUInt16BE(9+i*2);
+    if(temp < 32767){
+      vm.pv.push(temp/100);
+    }else{
+      vm.pv.push((temp-65536)/100);
+    }
+      //console.log(vm.pv);
+  }
+  vm.save();
 	value = data;
+  //vms.insert(vm);
+ // console.log(vm);
 });
 
 setInterval(getvalue,1000);
 
-var mongoose = require("mongoose");
-var dbhose = 'mongodb://localhost:27017/VM7000';
+
+/*
+var mongodb = require('mongodb');
+var server = new mongodb.Server('localhost',27017,{auto_reconnection:true});
+var db = new mongodb.Db('VM7000',server,{safe:true});
+var vms;
+db.open(function(err,db){
+db.collection('vms',{safe:true},function(err,collection){
+  vms = collection;
+  debugger;
+ // collection.insert({'test':'test1'},{safe:true},function(err,result){
+//  });
+});});
+*/
 var express = require('express');
 var app = express();
 
