@@ -3,9 +3,74 @@
 	<meta charset = "utf-8"/>
 	<script src = "/jquery-3.1.1.min.js"></script>
 	<script src = "vm7000.js"></script>
-  <script type='text/javascript' src='./jquery-3.1.1.js'></script>
+  <!--  <script type='text/javascript' src='./jquery-3.1.1.js'></script> -->
 <script type='text/javascript' src='./echarts.js'></script>
+<script>
+$(document).ready(function(){
+		var chart = document.getElementById('chart');
+		var charData = echarts.init(chart);
+		charData.setOption({
+title:{
+  text:'測試靜態json檔案'
+	},
+legend:{
+  data:['temp']	},
+xAxis:{
+  data:[]	},
+yAxis:{},
+series:[{
+name:'temp',
+type:'line',
+data:[]
+}]
+});
 
+charData.setOption({
+xAxis:{
+  data:[1,2,3,4,5,6,7]
+	},
+series:[{
+name:'temp',
+data:[9,8,7,6,5,4,3]
+}]
+});
+//alert("gogo");
+
+$.get("test1.json",function(data,status){
+		console.log(data);
+		});
+
+/*
+$.ajax({
+		type:'GET',
+		url:'test1.json',
+		//processData=true,
+		data:{},
+		dataType:'json',
+		success:function(json){
+		alert("success");
+		}
+		});
+/*
+
+
+/*
+$.get('./test1.json').done(function(data){
+	alert(data);
+	//console.dir(data);
+		charData.setOption({
+xAxis:{
+  data:data.date
+	},
+series:[{
+  name:'temp',
+	data:data.pv[1]
+	}]
+	});
+		});
+*/
+});
+</script>
 </head>
 <body>
 	<H1>VM7000 modbus TCP</H1>
@@ -19,6 +84,6 @@
  <tr><td>6</td><td></td>
 </tbody>
 </table>
-<div id='charts' style='width:800px;height:450px'></div>
+<div id='chart' style='width:800px;height:450px'></div>
 </body>
 </html>
