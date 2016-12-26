@@ -19,7 +19,7 @@ mongoose.Promise = require('bluebird');
 var db = mongoose.createConnection('localhost','VM7000');
 
 var vmschema = new mongoose.Schema({
-  Rdate:{type:Date,default:Date.now},
+  Rdate:{type:Number,default:Date.now},
   Model_No:String,
   pv:[]
 });
@@ -89,3 +89,11 @@ app.get('/getvalue',function(req,res){
 
 
 app.listen(8080);
+
+
+function alert(pv,diff){
+  if(Math.max.apply(null,pv) - Math.min.apply(null.pv) > diff){
+    
+ }
+};
+
