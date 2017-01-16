@@ -1,13 +1,13 @@
 /*
-var http = require('http');
-var server = http.createServer();
-var value;
-server.on('request',function(req,res){
-	res.writeHead(200,{'content-Type':'text/html','Access-Control-Allow-Origin':'*'});
-	res.write(value);
-	res.end();
-});
-server.listen(8080,'0.0.0.0');
+  This program is for integrate ten VM7000 paperless recorders to present all the PV on 
+one screen at all devices(OS independent).Commuicate with VM7000 by TCP Modbus, gather information and combine
+into one data chunck then send to Chrome.
+
+  It could make sound by speaker connects to server(Raspberry Pi) when alert happens,and send SMS to notify related staffs.History data could be queried by settting cretiria then presented in any kind of charts(echarts).
+
+Auther : Kenji Chen
+Version : 1.0
+Copy right : .....who cares
 */
 
 var value;
@@ -19,7 +19,7 @@ mongoose.Promise = require('bluebird');
 var db = mongoose.createConnection('localhost','VM7000');
 
 var vmschema = new mongoose.Schema({
-  Rdate:{type:Number,default:Date.now},
+  //Rdate:{type:Number,default:Date.now},
   Model_No:String,
   pv:[]
 });
@@ -34,6 +34,10 @@ var getvalue = function() {client.write(mbs);}
 
 client.connect(port,host,function(){
 //	console.log("connected to vm7000");
+});
+
+client.on('error',function(err){
+  console.error(err.code);
 });
 
 client.on('data',function(data){
@@ -87,6 +91,15 @@ app.get('/getvalue',function(req,res){
   res.end;
 });
 
+app.get('/gethis/:fDate/:tDate',function(req,res){
+  vms.find({'_id':{$gt:(req.params.fDate + '0000000000000000'),$lt:(req.params.tDate + '0000000000000000')}}).exec(function(err,his){
+
+//  vms.find().where('_id').gt(req.params.fDate + '0000000000000000').exec(function(err,his){
+    if (err) throw err;
+  res.send(his);
+  res.end;
+  });
+ });
 
 app.listen(8080);
 
