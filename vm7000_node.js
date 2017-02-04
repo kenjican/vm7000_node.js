@@ -59,7 +59,7 @@ client.on('data',function(data){
  // console.log(vm);
 });
 
-setInterval(getvalue,1000);
+//setInterval(getvalue,1000);
 
 
 /*
@@ -100,6 +100,27 @@ app.get('/gethis/:fDate/:tDate',function(req,res){
   res.end;
   });
  });
+
+app.get('/gethisto',function(req, res){
+  //var a;
+  var arr = [];
+  for(i=0;i<10;i++){
+     a = (0x58699800+i*30).toString(16) + '0000000000000000';
+    //console.log(a);
+     vms.findOne({'_id':{$gt:a}}).exec(function(err,his){
+        if(!err){
+         //console.log(his);
+         //arr.push(his.pv);
+         console.log(his);
+        }
+     });
+  }
+  //console.log(arr);
+  res.send(his);
+  res.end;
+});
+
+
 
 app.listen(8080);
 
