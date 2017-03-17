@@ -34,5 +34,5 @@ xmlhttp.onreadystatechange = function(){
   }}}
 
 
-//setInterval(getvalue,1000);
+setInterval(getvalue,1000);
 

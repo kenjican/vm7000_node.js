@@ -9,10 +9,10 @@ Auther : Kenji Chen
 Version : 1.0
 Copy right : .....who cares
 */
-
+var util = require('util');
 var value;
 var net = require('net');
-var host = '192.168.0.199';
+var host = '192.168.0.198';
 var port = 502;
 var mongoose = require("mongoose");
 mongoose.Promise = require('bluebird');
@@ -59,7 +59,7 @@ client.on('data',function(data){
  // console.log(vm);
 });
 
-//setInterval(getvalue,1000);
+setInterval(getvalue,1000);
 
 
 /*
@@ -102,23 +102,57 @@ app.get('/gethis/:fDate/:tDate',function(req,res){
  });
 
 app.get('/gethisto',function(req, res){
-  //var a;
-  var arr = [];
-  for(i=0;i<10;i++){
+  var arr = new Array();
+  var j=0;
+  for(i=0;i<1000;i++){
      a = (0x58699800+i*30).toString(16) + '0000000000000000';
-    //console.log(a);
      vms.findOne({'_id':{$gt:a}}).exec(function(err,his){
         if(!err){
+          
+         arr[j] = his;
+          j++;
+         //console.log(arr);
          //console.log(his);
-         //arr.push(his.pv);
-         console.log(his);
+         //console.log(i);
+         if(j===1000){
+           //console.log('i===9');
+           res.send(arr);
+           res.end;
+         }
         }
      });
+//       if(i===9){
+//         console.log(arr);
+//         res.send(arr);
+//         res.end;
+//       }
   }
   //console.log(arr);
-  res.send(his);
-  res.end;
+  //res.send(arr);
+  //res.end;
 });
+
+app.get('/gethist/:fdate/:recnum/:interv',function(req,res){
+//  mongoose.connect('mongodb://localhost:27017/VM7000',function(){
+var arr = new Array();
+var j = 0;
+for(i=0;i<parseInt(req.params.recnum);i++){
+  a = (parseInt(req.params.fdate) + i* parseInt(req.params.interv)).toString(16) + '0000000000000000';
+  vms.findOne({'_id':{$gt:a}}).exec(function(err,his){
+     if(!err){
+       arr[j] = his;
+       j++;
+     if(j===parseInt(req.params.recnum)){
+       res.send(arr);
+       res.end;
+     }
+     }
+  });
+}
+});
+//  mongoose.connection.db.eval('gethist(' + req.params.fdate +',' +req.params.recnum + ',' + req.params.inverv + ')',function(err,retval){console.log(retval);});
+ 
+//});
 
 
 

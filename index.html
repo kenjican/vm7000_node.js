@@ -24,14 +24,17 @@
  <tr><td>6</td><td></td>
 </tbody>
 </table>
-<font size ='12'>开始日期<input type='text' id='fDate' readonly/><br>
+</br></br>
+<font>开始日期<input type='text' id='fDate' readonly/><br>
   截止日期<input type='text' id='tDate' readonly/><input type='button' id='test' value= '测试用' onclick='caldate();'/><br>
+<input type='button' id='gethist' value='测试interval' onclick='getinte();'/></br>
+
 <select id='TimeInterval'>
   <option value = 1>1秒</option>
   <option value = 5>5秒</option>
   <option value = 30>30秒</option>
   <option value = 300>5分钟</option>
-  <option value = null>自定义</option>
+  <option value = 1800>30分钟</option>
 </select>
 <input type='button' value='历史曲线' onclick='gethis();'/></font>
 <div id='chart' style='width:800px;height:450px'></div>
