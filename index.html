@@ -2,19 +2,20 @@
 <html>
 <head>
 	<meta charset = "utf-8"/>
-	<script src = "/jquery-3.1.1.min.js"></script>
 	<script src = "vm7000.js"></script>
   <!--  <script type='text/javascript' src='./jquery-3.1.1.js'></script> -->
-<script type='text/javascript' src='./echarts.js'></script>
+<script src='echarts.js'></script>
  <script src='jquery-3.1.1.min.js'></script>
- <script src='./jquery-ui-1.12.1/jquery-ui.min.js'></script>
+  <script src = "vmchart.js"></script>
+  <link rel='stylesheet' type='text/css' href='vmchart.css'/>
+<!-- <script src='./jquery-ui-1.12.1/jquery-ui.min.js'></script>
  <script src='jquery-ui-timepicker-addon.js'></script>
  <link rel='stylesheet' media='all' type='text/css' href='jquery-ui-timepicker-addon.css'/>
- <link rel='stylesheet' media='all' type='text/css' href='./jquery-ui-1.12.1/jquery-ui.css'/>
+ <link rel='stylesheet' media='all' type='text/css' href='./jquery-ui-1.12.1/jquery-ui.css'/>-->
 </head>
 <body>
 	<H1>VM7000 modbus TCP</H1>
-<table style="width:50%;height=300px;" id="VM1">
+<table id="VM1">
 <tbody>
  <tr><td>1</td><td></td>
  <tr><td>2</td><td></td>
@@ -24,8 +25,9 @@
  <tr><td>6</td><td></td>
 </tbody>
 </table>
-</br></br>
-<font>开始日期<input type='text' id='fDate' readonly/><br>
+<div id='vmchart'></div>
+<br>
+开始日期<input type='text' id='fDate' readonly/><br>
   截止日期<input type='text' id='tDate' readonly/><input type='button' id='test' value= '测试用' onclick='caldate();'/><br>
 <input type='button' id='gethist' value='测试interval' onclick='getinte();'/></br>
 
@@ -36,177 +38,6 @@
   <option value = 300>5分钟</option>
   <option value = 1800>30分钟</option>
 </select>
-<input type='button' value='历史曲线' onclick='gethis();'/></font>
-<div id='chart' style='width:800px;height:450px'></div>
- <script>
-$(function(){
-  $('#fDate').datetimepicker({
-   timeFormat:'HH:mm:ss' 
-  });
-  $('#tDate').datetimepicker({
-   timeFormat:'HH:mm:ss',
-  });
-});
-var chart = document.getElementById('chart');
-var charData = echarts.init(chart);
-charData.showLoading();
-$(document).ready(function(){
-
-charData.setOption({
-title:{
-  text:'測試靜態json檔案'
-	},
-tooltip:{
-  trigger:'axis'
-},
-dataZoom:[
-  {
-   type:'slider',
-   xAxisIndex:0,
-   start:0,
-  end:25
-  },
-  {
-    type:'inside',
-    xAxisIndex:0,
-    start:0,
-    end:25
-  },
-  {
-    type:'slider',
-    yAxisIndex:0,
-    start:0,
-    end:100
-  },
-  {
-    type:'inside',
-    yAxisIndex:0,
-    start:0,
-    end:100
-  }
-],
-legend:{
-  data:['pv1','pv2','pv3','pv4','pv5','pv6']	},
-xAxis:{
-  data:[]	},
-yAxis:{},
-series:[{
-name:'pv1',
-type:'line',
-data:[]
-},
-{name:'pv2',
- type:'line',
- data:[]
-},
-{name:'pv3',
- type:'line',
- data:[]
-},
-{name:'pv4',
- type:'line',
- data:[]
-},
-{name:'pv5',
- type:'line',
- data:[]
- },
-{name:'pv6',
- type:'bar',
- data:[]
-}
-]
-});
-
-$.get('test1.json',function(data,status){
-  //console.log(data.Rdate);
-  charData.hideLoading();
-  var dt = new Date(0);
-  var dat=[];
-  var pv1=[],pv2=[],pv3=[],pv4=[],pv5=[],pv6=[];
-  for(i=0;i<data.length;i++){
-      dt.setTime(parseInt((data[i]._id).slice(0,8),16)*1000);
-     dat[i] = dt.toString();//    dat[i] = (data[i]._id).slice(0,8);
-     pv1[i] = data[i].pv[0];
-     pv2[i] = data[i].pv[1];
-     pv3[i] = data[i].pv[2];
-     pv4[i] = data[i].pv[3];
-     pv5[i] = data[i].pv[4];
-     pv6[i] = data[i].pv[5];
-  }
-  charData.setOption({
-    xAxis:{data:dat},
-    series:[{
-      name:'pv1',
-      data:pv1},
-    {name:'pv2',
-    data:pv2},
-     {name:'pv3',
-      data:pv3},
-    {name:'pv4',
-      data:pv4},
-    {name:'pv5',
-    data:pv5},
-     {name:'pv6',
-      data:pv6}
-    ]
-  });
-		});
-
-});
-function gethis(){
-  charData.showLoading();
-  var a = new Date($('#fDate').val());
-  var b = new Date($('#tDate').val());
-  gethistory('/gethis/' + (a.getTime()/1000).toString(16) + '/' + (b.getTime()/1000).toString(16));
-  //alert((a.getTime()/1000).toString(16));
-}
-
-var gethistory = function(fdate){$.get(fdate,function(data,status){
-  //console.log(data.Rdate);
-  charData.hideLoading();
-  var dt = new Date(0);
-  var tempdt;
-  var dat=[];
-  var pv1=[],pv2=[],pv3=[],pv4=[],pv5=[],pv6=[];
-  for(i=0;i<data.length;i++){
-     dt.setTime(parseInt((data[i]._id).slice(0,8),16)*1000);
-     dat[i] = dt.toString();//(data[i]._id).slice(0,8);
-     pv1[i] = data[i].pv[0];
-     pv2[i] = data[i].pv[1];
-     pv3[i] = data[i].pv[2];
-     pv4[i] = data[i].pv[3];
-     pv5[i] = data[i].pv[4];
-     pv6[i] = data[i].pv[5];
-  }
-  charData.setOption({
-    xAxis:{data:dat},
-    series:[{
-      name:'pv1',
-      data:pv1},
-    {name:'pv2',
-    data:pv2},
-     {name:'pv3',
-      data:pv3},
-    {name:'pv4',
-      data:pv4},
-    {name:'pv5',
-    data:pv5},
-     {name:'pv6',
-      data:pv6}
-    ]
-  });
-		});
-}
-
-function caldate(){
-  var a,b;
-  a = new Date($('#fDate').val());
-  b = new Date($('#tDate').val());
-  alert(((b.getTime() - a.getTime()))/1000/(parseInt($('#TimeInterval').val())));
-}
-
-</script>
-
+<input type='button' value='历史曲线' onclick='gethis();'/>
 </body>
 </html>

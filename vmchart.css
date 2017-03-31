@@ -1,0 +1,15 @@
+#vmchart{
+  position:fixed;
+  width:60%;
+  height:50%;
+  float:right;
+
+}
+
+#VM1{
+ position:relative;
+ width:30%;
+ height:auto;
+ float:left;
+
+}
