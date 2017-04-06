@@ -12,9 +12,11 @@ charData.showLoading();
   });
   */
 charData.setOption({
+/*
 title:{
   text:'測試靜態json檔案'
 	},
+  */
 tooltip:{
   trigger:'axis'
 },

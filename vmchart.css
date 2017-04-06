@@ -1,15 +1,24 @@
 #vmchart{
   position:fixed;
-  width:60%;
-  height:50%;
+  width:80%;
+  height:60%;
   float:right;
 
 }
 
 #VM1{
  position:relative;
- width:30%;
+ width:20%;
  height:auto;
  float:left;
 
 }
+
+body{
+  background-color:#c1c5b9;
+  scroll:auto;
+}
+
+tr:nth-child(odd){background-color:#afb6a2;}
+tr:hover{background-color:#8b9675;}
+
