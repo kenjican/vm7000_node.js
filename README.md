@@ -1,5 +1,5 @@
 # vm7000_node.js
-TCP Modbus和VM7000通訊
+***TCP Modbus和VM7000通訊***
 1: 每秒一次記錄在mongodb，用json格式
 2：每秒取max和min，超過均溫設定就輸出警報到（1）：接樹莓派的喇叭（2）客戶端也發出警報聲音和畫面閃爍變紅色，（3）發短信 （4）發微信
 3：VM7000的控制碼放在mongodb的collection
